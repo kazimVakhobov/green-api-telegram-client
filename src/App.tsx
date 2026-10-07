@@ -2,12 +2,12 @@ import { useState } from 'react'
 
 import type { InstanceCredentials } from './api/types'
 import { AuthScreen } from './components/AuthScreen'
+import { ChatLayout } from './components/ChatLayout'
 import {
   clearCredentials,
   loadCredentials,
   saveCredentials,
 } from './store/persistence'
-import styles from './App.module.css'
 
 export function App() {
   const [credentials, setCredentials] = useState(loadCredentials)
@@ -26,14 +26,13 @@ export function App() {
     return <AuthScreen onAuthorized={handleAuthorized} />
   }
 
+  // Переписка принадлежит инстансу: со сменой учётных данных каркас пересоздаём,
+  // иначе в состоянии останутся чаты прежнего.
   return (
-    <div className={styles.app}>
-      <div className={styles.splash}>
-        <span>Инстанс {credentials.idInstance} подключён</span>
-        <button className={styles.logout} type="button" onClick={handleLogout}>
-          Выйти
-        </button>
-      </div>
-    </div>
+    <ChatLayout
+      key={credentials.idInstance}
+      credentials={credentials}
+      onLogout={handleLogout}
+    />
   )
 }
