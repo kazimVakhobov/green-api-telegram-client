@@ -1,0 +1,84 @@
+:root {
+  color-scheme: light;
+
+  --panel: #ffffff;
+  --canvas: #dfe8ef;
+  --hover: #f4f4f5;
+  --divider: rgba(0, 0, 0, 0.08);
+
+  --bubble-incoming: #ffffff;
+  --bubble-outgoing: #eeffde;
+
+  --accent: #3390ec;
+  --accent-pressed: #2b7cd3;
+  --danger: #df3f40;
+
+  --text: #0f0f0f;
+  --text-muted: #707579;
+  --text-on-accent: #ffffff;
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-pill: 999px;
+
+  --shadow-panel: 0 1px 2px rgba(0, 0, 0, 0.08);
+  --shadow-float: 0 4px 16px rgba(0, 0, 0, 0.14);
+
+  --sidebar-width: 26rem;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--canvas);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,
+    Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+button {
+  cursor: pointer;
+}
+
+/* Полоса прокрутки появляется только при наведении — как в web-клиенте Telegram. */
+*::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: var(--radius-pill);
+}
+
+*:hover::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
+}
