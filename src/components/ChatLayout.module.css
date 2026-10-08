@@ -46,6 +46,15 @@
   background: var(--hover);
 }
 
+.offline {
+  flex: none;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid var(--divider);
+  background: #fdecec;
+  color: var(--danger);
+  font-size: 0.8125rem;
+}
+
 .chats {
   flex: 1;
   overflow-y: auto;

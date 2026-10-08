@@ -2,6 +2,7 @@ import { useEffect, useMemo, useReducer, useState } from 'react'
 
 import { createGreenApiClient, GreenApiError } from '../api/greenApi'
 import type { InstanceCredentials } from '../api/types'
+import { useIncomingMessages } from '../hooks/useIncomingMessages'
 import {
   chatsReducer,
   initialChatsState,
@@ -26,6 +27,7 @@ export function ChatLayout({ credentials, onLogout }: ChatLayoutProps) {
   )
   const [starting, setStarting] = useState(false)
   const client = useMemo(() => createGreenApiClient(credentials), [credentials])
+  const pollingError = useIncomingMessages(client, dispatch)
 
   useEffect(() => {
     saveChats(credentials.idInstance, state.chats)
@@ -99,6 +101,12 @@ export function ChatLayout({ credentials, onLogout }: ChatLayoutProps) {
             Выйти
           </button>
         </header>
+
+        {pollingError !== null && (
+          <p className={styles.offline} role="status">
+            Приём сообщений прерван: {pollingError}
+          </p>
+        )}
 
         {starting && (
           <StartChatForm
