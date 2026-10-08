@@ -1,7 +1,12 @@
-import { useEffect, useReducer, useState } from 'react'
+import { useEffect, useMemo, useReducer, useState } from 'react'
 
+import { createGreenApiClient, GreenApiError } from '../api/greenApi'
 import type { InstanceCredentials } from '../api/types'
-import { chatsReducer, initialChatsState } from '../store/chatsReducer'
+import {
+  chatsReducer,
+  initialChatsState,
+  sendTarget,
+} from '../store/chatsReducer'
 import { loadChats, saveChats } from '../store/persistence'
 import { ChatList } from './ChatList'
 import { Conversation } from './Conversation'
@@ -20,6 +25,7 @@ export function ChatLayout({ credentials, onLogout }: ChatLayoutProps) {
     (idInstance) => ({ ...initialChatsState, chats: loadChats(idInstance) }),
   )
   const [starting, setStarting] = useState(false)
+  const client = useMemo(() => createGreenApiClient(credentials), [credentials])
 
   useEffect(() => {
     saveChats(credentials.idInstance, state.chats)
@@ -33,16 +39,46 @@ export function ChatLayout({ credentials, onLogout }: ChatLayoutProps) {
     setStarting(false)
   }
 
-  function handleSend(text: string) {
+  async function handleSend(text: string) {
     if (activeChat === null) return
+
+    const chatId = activeChat.id
+    const target = sendTarget(activeChat)
+    // Пузырь появляется сразу, до ответа API: иначе кажется, что ввод завис.
+    const localId = `local-${crypto.randomUUID()}`
 
     dispatch({
       type: 'messageQueued',
-      chatId: activeChat.id,
-      localId: `local-${crypto.randomUUID()}`,
+      chatId,
+      localId,
       text,
       timestamp: Date.now(),
     })
+
+    if (target === null) {
+      dispatch({
+        type: 'messageFailed',
+        chatId,
+        localId,
+        reason: 'У чата нет ни номера, ни chatId — отправлять некуда',
+      })
+      return
+    }
+
+    try {
+      const idMessage = await client.sendMessage(target, text)
+      dispatch({ type: 'messageSent', chatId, localId, idMessage })
+    } catch (error) {
+      dispatch({
+        type: 'messageFailed',
+        chatId,
+        localId,
+        reason:
+          error instanceof GreenApiError
+            ? error.message
+            : 'Не удалось отправить сообщение',
+      })
+    }
   }
 
   return (

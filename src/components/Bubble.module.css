@@ -1,13 +1,15 @@
 .row {
   display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
 }
 
 .left {
-  justify-content: flex-start;
+  align-items: flex-start;
 }
 
 .right {
-  justify-content: flex-end;
+  align-items: flex-end;
 }
 
 /*
@@ -71,4 +73,12 @@
   font-size: 0.6875rem;
   font-weight: 600;
   text-align: center;
+}
+
+.reason {
+  max-width: min(32rem, 75%);
+  padding: 0 0.25rem;
+  color: var(--danger);
+  font-size: 0.75rem;
+  text-align: right;
 }

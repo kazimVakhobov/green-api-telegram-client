@@ -8,15 +8,20 @@ const STATUS_TITLE: Record<MessageStatus, string> = {
   failed: 'Не отправлено',
 }
 
+const STATUS_MARK: Record<MessageStatus, string> = {
+  pending: '◌',
+  sent: '✓',
+  failed: '!',
+}
+
 function StatusMark({ status }: { status: MessageStatus }) {
   return (
     <span
       className={`${styles.status} ${styles[status]}`}
-      title={STATUS_TITLE[status]}
       role="img"
       aria-label={STATUS_TITLE[status]}
     >
-      {status === 'pending' ? '◌' : status === 'sent' ? '✓' : '!'}
+      {STATUS_MARK[status]}
     </span>
   )
 }
@@ -37,6 +42,10 @@ export function Bubble({ message }: { message: Message }) {
           {message.direction === 'out' && <StatusMark status={message.status} />}
         </span>
       </div>
+
+      {message.direction === 'out' && message.error !== undefined && (
+        <p className={styles.reason}>{message.error}</p>
+      )}
     </div>
   )
 }
