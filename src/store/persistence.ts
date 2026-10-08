@@ -1,5 +1,5 @@
 import type { InstanceCredentials } from '../api/types'
-import type { Chat, Message, MessageStatus } from './types'
+import type { Chat, Message, MessageStatus, OutgoingMessage } from './types'
 
 const CREDENTIALS_KEY = 'green-api-telegram-client:credentials'
 
@@ -80,7 +80,7 @@ export function clearCredentials(): void {
 function asMessage(value: unknown): Message | null {
   if (typeof value !== 'object' || value === null) return null
 
-  const { id, direction, text, timestamp, status } = value as Record<
+  const { id, direction, text, timestamp, status, error } = value as Record<
     string,
     unknown
   >
@@ -100,7 +100,19 @@ function asMessage(value: unknown): Message | null {
   // `pending` после перезагрузки недостижим: запрос на отправку умер вместе со
   // страницей, и подтверждения уже не будет. Честнее показать неудачу.
   const restored: MessageStatus = status === 'sent' ? 'sent' : 'failed'
-  return { id, direction, text, timestamp, status: restored }
+  const message: OutgoingMessage = {
+    id,
+    direction,
+    text,
+    timestamp,
+    status: restored,
+  }
+
+  if (restored === 'failed' && typeof error === 'string') {
+    message.error = error
+  }
+
+  return message
 }
 
 function asChat(value: unknown): Chat | null {

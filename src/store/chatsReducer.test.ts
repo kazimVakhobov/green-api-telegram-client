@@ -1,8 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
-import { chatsReducer, initialChatsState } from './chatsReducer'
+import { chatsReducer, initialChatsState, sendTarget } from './chatsReducer'
 import type { ChatsAction } from './chatsReducer'
-import type { ChatsState, ReceivedMessage } from './types'
+import type { Chat, ChatsState, ReceivedMessage } from './types'
 
 const PHONE = '79991234567'
 const API_CHAT_ID = '10000000'
@@ -110,16 +110,18 @@ describe('отправка', () => {
     })
   })
 
-  it('помечает неудачу, не теряя текст', () => {
+  it('помечает неудачу, сохраняя текст и причину', () => {
     const state = apply(initialChatsState, started(), queued, {
       type: 'messageFailed',
       chatId: PHONE,
       localId: 'local-1',
+      reason: 'Исчерпан лимит запросов на тарифе',
     })
 
     expect(state.chats[0]?.messages[0]).toMatchObject({
       text: 'как дела',
       status: 'failed',
+      error: 'Исчерпан лимит запросов на тарифе',
     })
   })
 
@@ -133,6 +135,29 @@ describe('отправка', () => {
     })
 
     expect(after).toBe(before)
+  })
+})
+
+describe('sendTarget', () => {
+  const chat: Chat = {
+    id: PHONE,
+    phone: PHONE,
+    apiChatId: API_CHAT_ID,
+    title: 'Василиса',
+    messages: [],
+    updatedAt: 0,
+  }
+
+  it('пока номер известен, шлём по номеру', () => {
+    expect(sendTarget(chat)).toBe('79991234567@c.us')
+  })
+
+  it('без номера остаётся числовой chatId', () => {
+    expect(sendTarget({ ...chat, phone: null })).toBe(API_CHAT_ID)
+  })
+
+  it('без того и другого отправлять некуда', () => {
+    expect(sendTarget({ ...chat, phone: null, apiChatId: null })).toBeNull()
   })
 })
 

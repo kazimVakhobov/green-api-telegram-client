@@ -24,6 +24,8 @@ export interface IncomingMessage extends MessageBase {
 export interface OutgoingMessage extends MessageBase {
   direction: 'out'
   status: MessageStatus
+  /** Причина, по которой не ушло: показываем её под пузырём. */
+  error?: string
 }
 
 export type Message = IncomingMessage | OutgoingMessage

@@ -145,6 +145,28 @@ describe('переписка в localStorage', () => {
     })
   })
 
+  it('причина неудачи переживает перезагрузку', () => {
+    saveChats('4100000000', [
+      {
+        ...chat,
+        messages: [
+          {
+            id: 'ID-3',
+            direction: 'out',
+            text: 'не ушло',
+            timestamp: 2300,
+            status: 'failed',
+            error: 'Исчерпан лимит запросов на тарифе',
+          },
+        ],
+      },
+    ])
+
+    expect(loadChats('4100000000')[0]?.messages[0]).toMatchObject({
+      error: 'Исчерпан лимит запросов на тарифе',
+    })
+  })
+
   it('битые записи выбрасываются, целые остаются', () => {
     useStorage(
       fakeStorage({

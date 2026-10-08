@@ -1,4 +1,4 @@
-import { formatPhone } from '../lib/phoneNumber'
+import { formatPhone, toApiChatId } from '../lib/phoneNumber'
 import type {
   Chat,
   ChatsState,
@@ -28,8 +28,23 @@ export type ChatsAction =
       timestamp: number
     }
   | { type: 'messageSent'; chatId: string; localId: string; idMessage: string }
-  | { type: 'messageFailed'; chatId: string; localId: string }
+  | {
+      type: 'messageFailed'
+      chatId: string
+      localId: string
+      reason: string
+    }
   | { type: 'messageReceived'; message: ReceivedMessage }
+
+/**
+ * Куда уходит `sendMessage`. Отправляем по номеру, пока он известен: именно так
+ * заводится переписка с тем, кто нам ещё не отвечал. Числовой id остаётся
+ * запасным вариантом для чатов, где собеседник скрыл номер.
+ */
+export function sendTarget(chat: Chat): string | null {
+  if (chat.phone !== null) return toApiChatId(chat.phone)
+  return chat.apiChatId
+}
 
 /** Чат с новым сообщением уезжает наверх списка — как в Telegram. */
 function moveToTop(chats: Chat[], updated: Chat): Chat[] {
@@ -160,6 +175,7 @@ export function chatsReducer(
       return patchOutgoing(state, action.chatId, action.localId, (message) => ({
         ...message,
         status: 'failed',
+        error: action.reason,
       }))
 
     case 'messageReceived': {
