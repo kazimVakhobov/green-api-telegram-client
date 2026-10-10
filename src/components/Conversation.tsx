@@ -10,9 +10,10 @@ import styles from './Conversation.module.css'
 interface ConversationProps {
   chat: Chat
   onSend: (text: string) => void
+  onBack: () => void
 }
 
-export function Conversation({ chat, onSend }: ConversationProps) {
+export function Conversation({ chat, onSend, onBack }: ConversationProps) {
   const history = useRef<HTMLDivElement>(null)
 
   // Прокрутка вниз при смене чата и на каждое новое сообщение.
@@ -28,6 +29,14 @@ export function Conversation({ chat, onSend }: ConversationProps) {
   return (
     <section className={styles.conversation}>
       <header className={styles.header}>
+        <button
+          className={styles.back}
+          type="button"
+          onClick={onBack}
+          aria-label="К списку чатов"
+        >
+          ‹
+        </button>
         <ChatAvatar
           title={chat.title}
           seed={chat.id}

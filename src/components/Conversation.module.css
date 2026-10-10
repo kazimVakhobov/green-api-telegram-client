@@ -17,10 +17,30 @@
   background: var(--panel);
 }
 
+/* Возврат к списку нужен только там, где список спрятан. */
+.back {
+  display: none;
+  flex: none;
+  width: 2rem;
+  margin-left: -0.5rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--accent);
+  font-size: 1.75rem;
+  line-height: 1;
+}
+
 .avatar {
   width: 2.5rem;
   height: 2.5rem;
   font-size: 0.9375rem;
+}
+
+@media (max-width: 48rem) {
+  .back {
+    display: block;
+  }
 }
 
 .about {

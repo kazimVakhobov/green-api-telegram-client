@@ -73,6 +73,20 @@ describe('создание чата', () => {
   })
 })
 
+describe('выбор чата', () => {
+  it('открывается и закрывается', () => {
+    const opened = apply(initialChatsState, started(), {
+      type: 'chatOpened',
+      chatId: PHONE,
+    })
+    expect(opened.activeChatId).toBe(PHONE)
+
+    const closed = chatsReducer(opened, { type: 'chatClosed' })
+    expect(closed.activeChatId).toBeNull()
+    expect(closed.chats).toBe(opened.chats)
+  })
+})
+
 describe('отправка', () => {
   const queued: ChatsAction = {
     type: 'messageQueued',

@@ -20,6 +20,8 @@ export type ChatsAction =
       timestamp: number
     }
   | { type: 'chatOpened'; chatId: string }
+  /** Нужно на узком экране: там список и переписка не помещаются вместе. */
+  | { type: 'chatClosed' }
   | {
       type: 'messageQueued'
       chatId: string
@@ -141,6 +143,9 @@ export function chatsReducer(
 
     case 'chatOpened':
       return { ...state, activeChatId: action.chatId }
+
+    case 'chatClosed':
+      return { ...state, activeChatId: null }
 
     case 'messageQueued': {
       const chat = state.chats.find((item) => item.id === action.chatId)

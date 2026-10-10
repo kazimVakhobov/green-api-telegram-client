@@ -76,3 +76,22 @@
   color: var(--text-on-accent);
   font-size: 0.875rem;
 }
+
+/*
+ * На узком экране колонки не помещаются рядом: список занимает всю ширину, а
+ * открытый чат его закрывает. Вернуться назад — кнопкой в шапке переписки.
+ */
+@media (max-width: 48rem) {
+  .sidebar {
+    width: 100%;
+    border-right: none;
+  }
+
+  .behind {
+    display: none;
+  }
+
+  .placeholder {
+    display: none;
+  }
+}
