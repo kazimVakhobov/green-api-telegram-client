@@ -12,6 +12,13 @@ export type InstanceState =
   | 'starting'
   | 'pendingPassword'
 
+/** Из `getSettings` берём только то, от чего зависит приём через HTTP API. */
+export interface InstanceSettings {
+  webhookUrl?: string
+  incomingWebhook?: string
+  outgoingMessageWebhook?: string
+}
+
 /**
  * Дальше — форма уведомлений «как пришло по сети». Почти всё помечено
  * необязательным намеренно: это неразобранный JSON, типов которому никто не

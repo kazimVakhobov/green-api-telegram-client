@@ -1,5 +1,6 @@
 import type {
   InstanceCredentials,
+  InstanceSettings,
   InstanceState,
   QueuedNotification,
 } from './types'
@@ -133,6 +134,16 @@ export function createGreenApiClient(credentials: InstanceCredentials) {
         { signal },
       )
       return requireBody(body, 'getStateInstance').stateInstance
+    },
+
+    /** Настройки инстанса: по ним видно, дойдут ли уведомления до HTTP API. */
+    async getSettings(signal?: AbortSignal): Promise<InstanceSettings> {
+      const body = await call<InstanceSettings>(
+        url('getSettings'),
+        'getSettings',
+        { signal },
+      )
+      return requireBody(body, 'getSettings')
     },
 
     /** Возвращает idMessage: по нему потом узнаём эхо собственной отправки. */

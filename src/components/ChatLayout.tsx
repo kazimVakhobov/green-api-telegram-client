@@ -11,6 +11,7 @@ import {
 import { loadChats, saveChats } from '../store/persistence'
 import { ChatList } from './ChatList'
 import { Conversation } from './Conversation'
+import { InstanceNotice } from './InstanceNotice'
 import { StartChatForm } from './StartChatForm'
 import styles from './ChatLayout.module.css'
 
@@ -85,7 +86,9 @@ export function ChatLayout({ credentials, onLogout }: ChatLayoutProps) {
 
   return (
     <div className={styles.layout}>
-      <aside className={styles.sidebar}>
+      <aside
+        className={`${styles.sidebar} ${activeChat === null ? '' : styles.behind}`}
+      >
         <header className={styles.header}>
           <span className={styles.instance}>
             Инстанс {credentials.idInstance}
@@ -101,6 +104,8 @@ export function ChatLayout({ credentials, onLogout }: ChatLayoutProps) {
             Выйти
           </button>
         </header>
+
+        <InstanceNotice client={client} />
 
         {pollingError !== null && (
           <p className={styles.offline} role="status">
@@ -129,7 +134,11 @@ export function ChatLayout({ credentials, onLogout }: ChatLayoutProps) {
           <span className={styles.hint}>Выберите чат или начните новый</span>
         </div>
       ) : (
-        <Conversation chat={activeChat} onSend={handleSend} />
+        <Conversation
+          chat={activeChat}
+          onSend={handleSend}
+          onBack={() => dispatch({ type: 'chatClosed' })}
+        />
       )}
     </div>
   )
