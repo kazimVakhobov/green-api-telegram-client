@@ -1,0 +1,78 @@
+.list {
+  margin: 0;
+  padding: 0.25rem;
+  list-style: none;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 0.625rem;
+  width: 100%;
+  padding: 0.5rem;
+  border: none;
+  border-radius: var(--radius-md);
+  background: none;
+  text-align: left;
+}
+
+.row:hover {
+  background: var(--hover);
+}
+
+.active,
+.active:hover {
+  background: var(--accent);
+  color: var(--text-on-accent);
+}
+
+.body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-width: 0;
+}
+
+.line {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.title {
+  flex: 1;
+  overflow: hidden;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.time,
+.preview {
+  color: var(--text-muted);
+  font-size: 0.8125rem;
+}
+
+.time {
+  flex: none;
+}
+
+.preview {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* В выделенной строке серый текст на синем не читается. */
+.active .time,
+.active .preview {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.empty {
+  padding: 1.5rem 1.25rem;
+  color: var(--text-muted);
+  font-size: 0.875rem;
+  text-align: center;
+}
